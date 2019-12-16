@@ -3,8 +3,7 @@ import '../userScreens/myHomePage.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../userScreens/listProducts.dart';
-import '../userScreens/listItems.dart';
-//import '../userScreens/listItems.dart';
+
 class loginPage extends StatefulWidget {
 
   
@@ -14,11 +13,13 @@ class loginPage extends StatefulWidget {
 
 class _loginPageState extends State<loginPage> {
 var userID;
+var username;
     final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
     FirebaseUser firebaseUser;
    initUser() async{
     firebaseUser = await _firebaseAuth.currentUser();
     userID = firebaseUser.uid;
+    //username = firebaseUser.email;
     setState(() {});
   }
   @override
@@ -117,7 +118,8 @@ var userID;
           AuthResult user =  await FirebaseAuth.instance.signInWithEmailAndPassword(
             email: _email,
          password:_password ) ;
-         Navigator.push(context, MaterialPageRoute(builder: (context)=> AllProudct(currentId: userID,)));
+         username= _email;
+         Navigator.push(context, MaterialPageRoute(builder: (context)=> AllProudct(currentId: userID, currentName: username)));
         //Navigator.push(context, MaterialPageRoute(builder: (context)=> MyHomePage()));
         }
         catch(e){

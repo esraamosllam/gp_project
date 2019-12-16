@@ -5,10 +5,11 @@ import '../userScreens/listProducts.dart';
 
 class order extends StatefulWidget {
   var total;
+  var currentName;
   var currentId;
   @override
   _orderState createState() => _orderState();
-  order({this.total, this.currentId});
+  order({this.total, this.currentId, this.currentName});
 }
 
 class _orderState extends State<order> {
@@ -30,7 +31,8 @@ class _orderState extends State<order> {
               onPressed:(){
                 Firestore.instance.collection('notification').add(
                   {
-                    "userId":widget.currentId,
+                    "username":widget.currentName,
+                    
                     "total":widget.total,
                   },
                 

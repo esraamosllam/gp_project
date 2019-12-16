@@ -2,26 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:gp_project/userScreens/order.dart';
-import '../userScreens/itemdetails.dart';
 
-class myCart extends StatefulWidget {
+class notifications extends StatefulWidget {
   var currentId;
-  var currentName;
   
 
   @override
-  _myCartState createState() => _myCartState();
-  myCart({this.currentId, this.currentName});
+  _notificationsState createState() => _notificationsState();
+  //notifications({this.currentId});
 }
 
-class _myCartState extends State<myCart> {
+class _notificationsState extends State<notifications> {
   var total=0;
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
-        title: new Text("Cart "),
+        title: new Text("notifications "),
+
         centerTitle: false,
         actions: <Widget>[
           new IconButton(
@@ -30,7 +28,7 @@ class _myCartState extends State<myCart> {
                 color: Colors.white,
               ),
               onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context)=> order(currentName: widget.currentName, total: total,currentId: widget.currentId)));
+                //Navigator.push(context, MaterialPageRoute(builder: (context)=> order(total: total,currentId: widget.currentId)));
               }),
         ]   
       ),
@@ -42,7 +40,7 @@ class _myCartState extends State<myCart> {
 
     return 
         StreamBuilder<QuerySnapshot>(
-      stream: Firestore.instance.collection('cart').where('userId', isEqualTo: widget.currentId,).where('added', isEqualTo:false).snapshots(),
+      stream: Firestore.instance.collection('notification').snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasError)
           return new Text('Error: ${snapshot.error}');
@@ -59,8 +57,10 @@ class _myCartState extends State<myCart> {
               
               children: snapshot.data.documents.map((DocumentSnapshot document) {
                 return Card(
+                  
                   child: new Column(
                     children: <Widget>[
+                      
                       Container(
                      
                      child: Center(
@@ -70,27 +70,18 @@ class _myCartState extends State<myCart> {
                          crossAxisAlignment: CrossAxisAlignment.center,
                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                          children: <Widget>[
+                           
                            Padding(
                              padding: const EdgeInsets.all(16.0),
-                             child: Text(document['itemTitle'],
-                             style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),
+                             
+                             child: Text("${document['username']} make an order with price = ${document['total'].toString()}",
+                             overflow: TextOverflow.ellipsis,
+                             style: TextStyle(fontWeight: FontWeight.bold,fontSize: 10),),
                            ),
-                           Padding(
-                             padding: const EdgeInsets.all(16.0),
-                             child: Text("${document['itemPrice'].toString()} EG",
-                             style: TextStyle(fontSize: 16),),
-                           ),
-                           IconButton(icon: Icon(Icons.add_shopping_cart,color: Colors.green,),
-                         onPressed: (){
-                           Firestore.instance.collection('cart').document(document.documentID).updateData(
-                             {"added": true,}
-                           );
-                           total+=document['itemPrice'];
-                           print('total is ${total} ');
-                         },),
+                           
                        IconButton(icon: Icon(Icons.delete,color: Colors.red,),
                          onPressed: (){
-                           Firestore.instance.collection('cart').document(document.documentID).delete();
+                           Firestore.instance.collection('notification').document(document.documentID).delete();
                          },),
 
                          ],

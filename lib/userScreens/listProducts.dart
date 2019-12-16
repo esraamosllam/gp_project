@@ -2,14 +2,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:gp_project/userScreens/notifications.dart';
 import '../userScreens/itemdetails.dart';
 import '../userScreens/cart.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 class AllProudct extends StatefulWidget {
   var currentId;
+  var currentName;
   @override
   _Allproductstate createState() => _Allproductstate();
-  AllProudct({this.currentId});
+  AllProudct({this.currentId, this.currentName});
 }
 
 class _Allproductstate extends State<AllProudct> {
@@ -32,7 +34,15 @@ class _Allproductstate extends State<AllProudct> {
                 color: Colors.white,
               ),
               onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=> myCart(currentId: widget.currentId,)));
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=> myCart(currentId: widget.currentId, currentName:widget.currentName)));
+              }),
+              new IconButton(
+              icon: new Icon(
+                Icons.notifications,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=> notifications()));
               }),
         ]    
       ),
@@ -99,6 +109,7 @@ class _Allproductstate extends State<AllProudct> {
                             Firestore.instance.collection('cart')..add(
                               {
                                 "userId":widget.currentId,
+                                "username": widget.currentName,
                                 "itemTitle": document['title'],
                                 "itemPrice": document['price'],
                                 "added": false,
